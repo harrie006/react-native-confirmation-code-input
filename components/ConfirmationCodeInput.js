@@ -22,6 +22,7 @@ export default class ConfirmationCodeInput extends Component {
     codeInputStyle: TextInput.propTypes.style,
     containerStyle: viewPropTypes.style,
     onFulfill: PropTypes.func,
+    onCodeChange: PropTypes.func,
   };
   
   static defaultProps = {
@@ -61,10 +62,12 @@ export default class ConfirmationCodeInput extends Component {
   }
   
   clear() {
+    var codeArr = new Array(this.props.codeLength).fill('');
     this.setState({
-      codeArr: new Array(this.props.codeLength).fill(''),
+      codeArr: codeArr,
       currentIndex: 0
     });
+    this.props.onCodeChange(codeArr);
     this._setFocus(0);
   }
   
@@ -88,6 +91,7 @@ export default class ConfirmationCodeInput extends Component {
       }
     }
     
+    this.props.onCodeChange(newCodeArr);
     this.setState({
       codeArr: newCodeArr,
       currentIndex: index
@@ -218,9 +222,11 @@ export default class ConfirmationCodeInput extends Component {
       }
       this._blur(this.state.currentIndex);
     } else {
+      const code = newCodeArr.join('');
       this._setFocus(this.state.currentIndex + 1);
     }
     
+    this.props.onCodeChange(newCodeArr);
     this.setState(prevState => {
       return {
         codeArr: newCodeArr,
